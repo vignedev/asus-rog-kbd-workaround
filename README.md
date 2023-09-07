@@ -11,9 +11,12 @@ To learn the story behind it, go on below. Otherwise, use the script attached, y
 ```console
 $ ./keyboard.sh
 usage: ./keyboard.sh <on|off>
+       ./keyboard.sh brightness <number>
 ```
 
-That's it. Quite self explanatory, isn't it?
+That's it. Quite self explanatory, isn't it? Okay, small note though: `<number>` should be a number from 0 to 3 (inclusive). Other values shouldn't do anything.
+
+If you get a `failed to find approapriate hidraw` error, check and replace the `MODALIAS` at the beginning of the file if you still wish to try it out.
 
 ## Okay, how?
 
@@ -90,7 +93,11 @@ I'll spare you the headache, request number 3 is different. Now, if we cross ref
 
 From the [same project](https://gitlab.com/asus-linux/asusctl/-/blob/4641e19c43ef5fa85e5d8d2aa5b6d39fce67db33/rog-aura/src/usb.rs#L18), we can also see that request 1,4 and 2,5 are called `LED_APPLY` and `LED_SET`. The first request sems to be [`AuraEffect` packet data](https://gitlab.com/asus-linux/asusctl/-/blob/4641e19c43ef5fa85e5d8d2aa5b6d39fce67db33/rog-aura/src/builtin_modes.rs#L407).
 
-And this is where my journey ends for now, got what I wanted after all.
+~~And this is where my journey ends for now, got what I wanted after all.~~
+
+After some digging around, I remembered there was a `rogauracore` project, which allowed to change the brightness of the keyboard. It didn't work, however I thought that perhaps the packets might be similiarso I found out this [packet sequence](https://github.com/wroberts/rogauracore/blob/a872431a59e47c1ab0b2a523e413723bdcd93a6e/src/rogauracore.c#L112). Cross referencing it with the `asusctl` project, we can see that in `usb.rs` I somehow missed [`aura_brightness_bytes`](https://gitlab.com/asus-linux/asusctl/-/blob/4641e19c43ef5fa85e5d8d2aa5b6d39fce67db33/rog-aura/src/usb.rs#L22).
+
+And so, if that packet is sent over (with correct brightness being 0-3 inclusive), the the backlight works, yay.
 
 ## Disclaimer
 
