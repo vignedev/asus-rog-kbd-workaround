@@ -4,9 +4,44 @@
 
 There's an ongoing issue with ASUS Zephyrus G15 2022 (GA503RM) devices, whose keyboards backlight cannot be controlled on Linux. While it does provide you with a `/sys/devices/platform/asus-nb-wmi/leds/asus::kbd_backlight`, changing its value does nothing and the keyboard will remain the same regardless.
 
-To learn the story behind it, go on below. Otherwise, use the script attached, you ought to double check if everything regarding IDs fit. 
+To learn the story behind it, go on below. Otherwise, use the script attached, you ought to double check if everything regarding IDs fit.
 
-## Usage
+Minor update: created a workaround that is more seamless as it uses the data already provided, so your keyboard button for the backlight should work.
+
+---
+
+## Daemon version
+
+This monitors the already existing `/sys/devices/platform/asus-nb-wmi/leds/asus::kbd_backlight/brightness` file, reads it and automatically applies essentially the same packets described as in the script version.
+
+### Requirements
+
+- `hidapi`
+- `g++` or `gcc`
+
+### Building
+
+```console
+$ g++ main.c $(pkg-config --cflags hidapi-hidraw) $(pkg-config --libs hidapi-hidraw) -o rogkbdsync
+```
+
+### Usage
+
+```console
+$ sudo ./rogkbdsync
+```
+
+Again, that's it (thanks to the hard coded stuff in it). You will need to either have `sudo` or write access to the approapriate HID device. You will also need to have this running in the background, of course.
+
+Small disclaimer: my knowledge of C is kind of dusty, so be aware of that. I did however try to handle all errors and such, so hopefully it won't cause havok.
+
+---
+
+## Script version
+
+This is the "original" version that was the workaround. You had to call it yourself.
+
+### Usage
 
 ```console
 $ ./keyboard.sh
@@ -20,7 +55,7 @@ Okay, small note though: `<number>` should be a number from 0 to 3 (inclusive). 
 
 If you get a `failed to find approapriate hidraw` error, check and replace the `MODALIAS` at the beginning of the file if you still wish to try it out.
 
-## Okay, how?
+### Okay, how?
 
 During fiddling with `rog-control-center`, I was somehow able to make the backlight go off and couldn't get it back on. It even persisted through multiple reboots (notably right after `asusd` service started).
 
