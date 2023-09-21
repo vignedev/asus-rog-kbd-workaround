@@ -1,0 +1,11 @@
+[Unit]
+Description=Workaround for GA503RM Keyboard Backlights
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rogkbdsync
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
