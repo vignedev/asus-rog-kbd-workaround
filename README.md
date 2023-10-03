@@ -23,22 +23,22 @@ Small disclaimer: my knowledge of C is kind of dusty, so be aware of that. I did
 
 ### Building
 
-```console
+```sh
 # For any Linux distro
-$ g++ src/main.c $(pkg-config --cflags hidapi-hidraw) $(pkg-config --libs hidapi-hidraw) -o rogkbdsync
+g++ src/main.c $(pkg-config --cflags hidapi-hidraw) $(pkg-config --libs hidapi-hidraw) -o rogkbdsync
 
 # Only on Arch-based systems (uses PKGBUILD)
-$ makepkg -si
+makepkg -si
 ```
 
 ### Usage
 
-```console
+```sh
 # For any Linux distro
-$ sudo ./rogkbdsync
+sudo ./rogkbdsync
 
 # If you have installed the *.service or used the PKGBUILD
-$ sudo systemctl enable --now rogkbdsync
+sudo systemctl enable --now rogkbdsync
 ```
 
 Again, that's it (thanks to the hard coded stuff in it). You will need to either have `sudo` or write access to the approapriate HID device. You will also need to have this running in the background, of course.
